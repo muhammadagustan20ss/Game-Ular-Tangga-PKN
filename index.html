@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GALAXY QUEST: EDU SNAKES &amp; LADDERS</title>
+<style>
+:root{--bg:#0b1030;--card:#171e4d;--card2:#212a66;--tx:#eef2ff;--mut:#a9b4ec;--cy:#22d3ee;--pu:#8b5cf6;--go:#fbbf24;--ok:#34d399;--bad:#f87171;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--tx);min-height:100vh;background:radial-gradient(circle at 15% 10%,#3b1d8f55,transparent 40%),radial-gradient(circle at 85% 80%,#0e749044,transparent 45%),linear-gradient(160deg,#070a24,#141a52 60%,#0b1030);background-attachment:fixed}
+.deco{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.25;font-size:2.4rem}
+.deco span{position:absolute}
+.wrap{position:relative;z-index:1;max-width:1300px;margin:auto;padding:10px}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:8px 12px;background:#10163d;border:1px solid #3a46a0;border-radius:18px}
+.logo{font-size:2rem}h1{margin:0;font-size:clamp(1rem,2.6vw,1.6rem);letter-spacing:.04em;background:linear-gradient(90deg,var(--cy),var(--go));-webkit-background-clip:text;background-clip:text;color:transparent;flex:1;min-width:200px}
+button,select,input,textarea{font:inherit}
+.btn{border:0;border-radius:12px;padding:9px 14px;font-weight:700;cursor:pointer;color:#0b1030;background:linear-gradient(135deg,var(--cy),#60a5fa);transition:.15s}
+.btn:hover:not(:disabled){transform:translateY(-1px);filter:brightness(1.1)}.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.gold{background:linear-gradient(135deg,var(--go),#f59e0b)}.btn.pu{background:linear-gradient(135deg,var(--pu),#c084fc);color:#fff}.btn.red{background:linear-gradient(135deg,#f87171,#ef4444);color:#fff}.btn.sm{padding:6px 10px;font-size:.85rem}
+:focus-visible{outline:3px solid var(--go);outline-offset:2px}
+main{display:grid;grid-template-columns:340px 1fr;gap:12px;margin-top:12px;align-items:start}
+.panel{background:var(--card);border:1px solid #3a46a0;border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.info{font-size:.88rem;color:var(--mut);line-height:1.4}.info b{color:var(--go)}
+.team{display:flex;align-items:center;gap:10px;padding:8px;border-radius:14px;background:var(--card2);border:2px solid transparent}
+.team.act{border-color:var(--go);box-shadow:0 0 14px #fbbf2455}
+.team .ic{font-size:1.9rem}.team .st{font-size:.8rem;color:var(--mut)}.team .nm{font-weight:800}
+.dicebox{display:flex;align-items:center;gap:12px}
+#dice{width:68px;height:68px;border-radius:16px;background:#fff;color:#111;font-size:2.4rem;font-weight:800;display:grid;place-items:center;flex:none}
+#dice.roll{animation:sp .15s linear infinite}@keyframes sp{to{transform:rotate(90deg) scale(.92)}}
+#status{padding:8px 10px;border-radius:12px;background:#0b1030;font-size:.92rem;min-height:44px}
+#log{margin:0;padding-left:18px;font-size:.8rem;color:var(--mut);max-height:110px;overflow:auto}
+.boardwrap{display:flex;justify-content:center}
+#board{position:relative;width:min(100%,calc(100vh - 190px));min-width:300px;aspect-ratio:1;border-radius:16px;overflow:hidden;border:3px solid var(--go);background:#0b1030}
+#grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(10,1fr);grid-template-rows:repeat(10,1fr)}
+.c{position:relative;font-size:clamp(.5rem,1.7vw,.85rem);font-weight:800;padding:2px 3px;color:#0b1030}
+.c.a{background:#a5f3fc}.c.b{background:#c4b5fd}.c.s{background:#fde68a}.c.e{background:#fcd34d}
+.c small{position:absolute;right:3px;bottom:1px;font-size:.9em}
+svg#ov{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+.pawn{position:absolute;width:7.5%;height:7.5%;z-index:3;display:grid;place-items:center;font-size:clamp(.9rem,3.4vw,1.8rem);border-radius:50%;transition:left .25s,top .25s;transform:translate(-50%,-50%);filter:drop-shadow(0 2px 3px #000b)}
+.pawn.p0{background:#22d3ee;box-shadow:0 0 0 2px #fff}.pawn.p1{background:#fbbf24;box-shadow:0 0 0 2px #fff}
+.bottom{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal{position:fixed;inset:0;background:#050818cc;display:none;align-items:center;justify-content:center;z-index:50;padding:12px}
+.modal.on{display:flex}
+.box{background:var(--card);border:2px solid var(--cy);border-radius:20px;padding:16px;width:min(680px,100%);max-height:92vh;overflow:auto}
+.box h2{margin:0 0 8px}
+.opt{display:block;width:100%;text-align:left;margin:6px 0;padding:11px 14px;border-radius:12px;border:2px solid #3a46a0;background:var(--card2);color:var(--tx);cursor:pointer;font-weight:600}
+.opt:hover:not(:disabled){border-color:var(--cy)}.opt.ok{background:#065f46;border-color:var(--ok)}.opt.no{background:#7f1d1d;border-color:var(--bad)}
+label{display:block;font-size:.85rem;color:var(--mut);margin-top:8px}
+input[type=text],textarea,select{width:100%;padding:8px 10px;border-radius:10px;border:1px solid #4a56b0;background:#0b1030;color:var(--tx)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.qi{display:flex;gap:6px;align-items:center;padding:6px 8px;background:var(--card2);border-radius:10px;margin:4px 0;font-size:.85rem}.qi span{flex:1}
+.chk{display:flex;gap:6px;align-items:center;margin-top:8px;font-size:.9rem}.chk input{width:auto}
+.fb{padding:10px;border-radius:12px;margin-top:8px;font-size:.92rem}.fb.ok{background:#064e3b}.fb.no{background:#7f1d1d}
+table{width:100%;border-collapse:collapse;font-size:.9rem}td,th{padding:6px;border-bottom:1px solid #3a46a0;text-align:left}
+.win{text-align:center}.win .big{font-size:3rem;animation:bn 1s ease-in-out infinite alternate}@keyframes bn{to{transform:translateY(-8px)}}
+@media(max-width:900px){main{grid-template-columns:1fr}.boardwrap{order:-1}#board{width:100%}.bottom{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<div class="deco" aria-hidden="true"><span style="left:3%;top:20%">🪐</span><span style="right:4%;top:12%">🚀</span><span style="left:6%;bottom:8%">☄️</span><span style="right:6%;bottom:14%">🛸</span><span style="left:48%;top:3%">⭐</span></div>
+<div class="wrap">
+<header><span class="logo">🚀</span><h1 id="title">GALAXY QUEST</h1>
+<button class="btn gold" id="bSet">⚙️ Pengaturan Guru</button><button class="btn pu" id="bHelp">❓ Petunjuk</button><button class="btn" id="bPause">⏸ Jeda</button><button class="btn" id="bSnd" aria-label="Suara">🔊 Suara</button><button class="btn red" id="bRe">🔄 Mulai Ulang</button></header>
+<main>
+<section class="panel" aria-label="Panel kontrol">
+<div class="info" id="meta"></div>
+<div id="teams"></div>
+<div class="dicebox"><div id="dice" aria-live="polite">🎲</div><button class="btn gold" id="bRoll" style="flex:1;font-size:1.05rem">🎲 Lempar Dadu</button></div>
+<div id="status" aria-live="polite"></div>
+<div class="info"><b>Riwayat</b><ol id="log" reversed></ol></div>
+</section>
+<section class="boardwrap"><div id="board"><div id="grid"></div><svg id="ov" viewBox="0 0 100 100" preserveAspectRatio="none"></svg></div></section>
+</main>
+<div class="bottom"><div class="panel info" id="rules"></div><div class="panel info" id="mat"></div></div>
+</div>
+
+<div class="modal" id="mQ"><div class="box" role="dialog" aria-modal="true"><div id="qh" class="info"></div><h2 id="qt"></h2><div id="qo"></div><div id="qf"></div></div></div>
+<div class="modal" id="mWin"><div class="box win"><div class="big">🏆</div><h2 id="wn"></h2><p id="wm"></p><div id="rec"></div><p><button class="btn gold" id="bAgain">🔁 Main Lagi</button> <button class="btn" id="bBack">Kembali ke Papan</button></p></div></div>
+<div class="modal" id="mPause" style="z-index:70"><div class="box" style="text-align:center"><h2>⏸ Permainan Dijeda</h2><button class="btn gold" id="bResume">▶ Lanjutkan</button></div></div>
+<div class="modal" id="mConf" style="z-index:80"><div class="box"><h2>Mulai ulang permainan?</h2><p>Posisi dan skor akan diatur ulang.</p><button class="btn red" id="cYes">Ya, ulangi</button> <button class="btn" id="cNo">Batal</button></div></div>
+<div class="modal" id="mHelp"><div class="box"><h2>Petunjuk Permainan</h2><ol class="info"><li>Dua kelompok bergiliran. Kelompok aktif menekan <b>Lempar Dadu</b>.</li><li>Sebuah soal muncul. Diskusikan, lalu pilih jawaban.</li><li>Benar: pion maju sesuai dadu. Salah: pion diam, giliran pindah.</li><li>Berhenti di pangkal tangga naik, di kepala ular turun.</li><li>Capai kotak 100 dengan angka tepat. Jika melebihi 100, pion tidak bergerak.</li></ol><button class="btn" data-close>Tutup</button></div></div>
+<div class="modal" id="mSet"><div class="box" style="width:min(780px,100%)"><h2>⚙️ Pengaturan Guru</h2>
+<label>Nama permainan/kegiatan<input type="text" id="fname"></label>
+<div class="row"><label>Jenjang &amp; kelas<input type="text" id="flevel"></label><label>Mata pelajaran<input type="text" id="fsubj"></label></div>
+<label>Topik/materi<input type="text" id="ftopic"></label>
+<label>Tujuan pembelajaran<textarea id="fgoal" rows="2"></textarea></label>
+<label>Petunjuk/aturan tambahan<textarea id="frules" rows="2"></textarea></label>
+<div class="row"><label>Kelompok 1<input type="text" id="ft0"></label><label>Kelompok 2<input type="text" id="ft1"></label>
+<label>Pion kelompok 1<select id="fi0"></select></label><label>Pion kelompok 2<select id="fi1"></select></label></div>
+<div class="row"><label>Tingkat kesulitan soal<select id="fdiff"><option value="semua">Semua</option><option value="mudah">Mudah</option><option value="sedang">Sedang</option><option value="sulit">Sulit</option></select></label></div>
+<div class="chk"><input type="checkbox" id="fsq"><span>Acak urutan soal</span></div><div class="chk"><input type="checkbox" id="fso"><span>Acak pilihan jawaban</span></div>
+<h3>Bank Soal (<span id="qn">0</span>)</h3><div id="ql"></div>
+<div class="panel" style="margin-top:8px" id="qe"><b id="qeh">Tambah soal</b>
+<label>Pertanyaan<textarea id="eq" rows="2"></textarea></label>
+<div class="row"><label>Jenis<select id="et"><option value="mcq">Pilihan ganda</option><option value="tf">Benar-Salah</option></select></label><label>Tingkat<select id="ed"><option>mudah</option><option>sedang</option><option>sulit</option></select></label></div>
+<div class="row" id="eopts"><label>A<input type="text" id="eo0"></label><label>B<input type="text" id="eo1"></label><label>C<input type="text" id="eo2"></label><label>D<input type="text" id="eo3"></label></div>
+<label>Kunci jawaban<select id="ea"></select></label><label>Pembahasan<textarea id="ex" rows="2"></textarea></label>
+<div><button class="btn sm" id="eSave">Simpan soal</button> <button class="btn sm pu" id="eCancel">Batal</button></div></div>
+<p><button class="btn sm" id="bExp">⬇ Ekspor JSON</button> <button class="btn sm" id="bImp">⬆ Impor JSON</button><input type="file" id="fimp" accept=".json" hidden></p>
+<p class="info" id="serr" style="color:var(--bad)"></p>
+<button class="btn gold" id="sSave">💾 Simpan &amp; Terapkan</button> <button class="btn pu" id="sReset">Contoh Bawaan</button> <button class="btn" data-close>Tutup</button>
+<p class="info">Pengaturan disimpan di peramban perangkat ini (localStorage), bukan di server.</p></div></div>
+
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const SN={16:6,47:26,49:11,56:53,62:19,64:60,87:24,93:73,95:75,98:78},LD={2:23,4:14,9:31,21:42,28:84,36:44,51:67,71:91,80:96};
+const ICONS=['🚀','🪐','🛸','☄️','🌟','👽','🌙','🛰️'],sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const Q=(q,o,a,x,d)=>({q,type:'mcq',opts:o,ans:a,exp:x,diff:d}),TF=(q,a,x,d)=>({q,type:'tf',opts:['Benar','Salah','',''],ans:a?0:1,exp:x,diff:d});
+const DEF={name:'GALAXY QUEST: EDU SNAKES & LADDERS',level:'SD Kelas IV',subj:'Pendidikan Pancasila',topic:'Hak dan Kewajiban',goal:'Siswa mampu mengidentifikasi hak dan kewajiban, menjelaskan pengertiannya, serta memberi contoh.',rules:'Diskusikan jawaban dengan tenang bersama kelompok.',t:['Tim Roket','Tim Planet'],ic:['🚀','🪐'],diff:'semua',sq:true,so:true,qs:[
+Q('Sesuatu yang harus kita terima dan dapatkan disebut...',['Hak','Kewajiban','Larangan','Tugas'],0,'Hak adalah sesuatu yang kita terima atau dapatkan.','mudah'),
+Q('Sesuatu yang harus kita laksanakan disebut...',['Hak','Kewajiban','Hadiah','Pilihan'],1,'Kewajiban adalah sesuatu yang harus dilaksanakan.','mudah'),
+Q('Belajar di sekolah adalah contoh...',['Hak anak','Kewajiban guru','Larangan','Hukuman'],0,'Mendapat pendidikan adalah hak setiap anak.','mudah'),
+Q('Mengerjakan PR adalah contoh...',['Hak','Kewajiban siswa','Hiburan','Hadiah'],1,'Mengerjakan tugas adalah kewajiban siswa.','mudah'),
+TF('Hak dan kewajiban harus dijalankan seimbang.',true,'Keduanya saling melengkapi.','mudah'),
+TF('Kewajiban boleh ditinggalkan asal hak diterima.',false,'Hak dan kewajiban harus seimbang.','sedang'),
+Q('Mendapat perlindungan dari orang tua adalah...',['Kewajiban anak','Hak anak','Kewajiban guru','Larangan'],1,'Perlindungan orang tua adalah hak anak.','sedang'),
+Q('Contoh kewajiban siswa terhadap sekolah adalah...',['Menjaga kebersihan kelas','Meminta jajan','Bermain saat belajar','Datang sesuka hati'],0,'Menjaga kebersihan kelas adalah kewajiban siswa.','sedang'),
+Q('Jika semua orang hanya menuntut hak tanpa menjalankan kewajiban, maka...',['Kehidupan tertib','Terjadi ketidakadilan dan kekacauan','Semua senang','Tidak ada akibat'],1,'Tanpa kewajiban, hak orang lain terabaikan.','sulit')]};
+let cfg,D,G,editIdx=-1,snd=true;
+const clone=o=>JSON.parse(JSON.stringify(o));
+function load(){try{const s=localStorage.getItem('gq_cfg');if(s){const c=JSON.parse(s);if(c&&Array.isArray(c.qs))return Object.assign(clone(DEF),c)}}catch(e){}return clone(DEF)}
+function save(){try{localStorage.setItem('gq_cfg',JSON.stringify(cfg))}catch(e){}}
+function validQ(x){if(!x||typeof x.q!=='string'||!x.q.trim())return false;const tf=x.type==='tf',n=tf?2:4;if(!Array.isArray(x.opts))return false;for(let i=0;i<n;i++)if(!String(x.opts[i]||'').trim())return false;return Number.isInteger(x.ans)&&x.ans>=0&&x.ans<n&&['mudah','sedang','sulit'].includes(x.diff)}
+function pos(n){const r=Math.floor((n-1)/10),c=r%2?9-(n-1)%10:(n-1)%10;return{x:(c+.5)*10,y:(9-r+.5)*10,r,c}}
+// sound
+let ac;function tone(f,d=.12,t='sine'){if(!snd)return;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type=t;o.frequency.value=f;g.gain.value=.06;o.connect(g);g.connect(ac.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+d);o.stop(ac.currentTime+d)}catch(e){}}
+// board
+function build(){const g=$('#grid');g.innerHTML='';for(let r=9;r>=0;r--)for(let c=0;c<10;c++){const n=r*10+(r%2?9-c:c)+1,d=document.createElement('div');d.className='c '+((r+c)%2?'a':'b')+(n==1?' s':n==100?' e':'');d.dataset.n=n;d.innerHTML=n+(n==1?'<small>🏁</small>':n==100?'<small>⭐</small>':'');g.appendChild(d)}
+let s='<defs><filter id="sh"><feDropShadow dx=".3" dy=".3" stdDeviation=".3" flood-opacity=".5"/></filter></defs>';
+for(const a in LD){const A=pos(+a),B=pos(LD[a]),dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy),nx=-dy/L*1.3,ny=dx/L*1.3;
+s+=`<g filter="url(#sh)"><line x1="${A.x+nx}" y1="${A.y+ny}" x2="${B.x+nx}" y2="${B.y+ny}" stroke="#92400e" stroke-width="1"/><line x1="${A.x-nx}" y1="${A.y-ny}" x2="${B.x-nx}" y2="${B.y-ny}" stroke="#92400e" stroke-width="1"/>`;
+const k=Math.max(2,Math.floor(L/5));for(let i=1;i<k;i++){const t=i/k;s+=`<line x1="${A.x+dx*t+nx}" y1="${A.y+dy*t+ny}" x2="${A.x+dx*t-nx}" y2="${A.y+dy*t-ny}" stroke="#d97706" stroke-width=".8"/>`}s+='</g>'}
+for(const h in SN){const A=pos(+h),B=pos(SN[h]),dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy),nx=-dy/L*4,ny=dx/L*4;
+s+=`<g filter="url(#sh)"><path d="M${A.x} ${A.y} C${A.x+dx*.25+nx} ${A.y+dy*.25+ny},${A.x+dx*.75-nx} ${A.y+dy*.75-ny},${B.x} ${B.y}" fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round"/><path d="M${A.x} ${A.y} C${A.x+dx*.25+nx} ${A.y+dy*.25+ny},${A.x+dx*.75-nx} ${A.y+dy*.75-ny},${B.x} ${B.y}" fill="none" stroke="#bbf7d0" stroke-width=".7" stroke-dasharray="1.4 1.6" stroke-linecap="round"/><circle cx="${A.x}" cy="${A.y}" r="2.1" fill="#15803d"/><circle cx="${A.x-.6}" cy="${A.y-.5}" r=".5" fill="#fff"/><circle cx="${A.x+.6}" cy="${A.y-.5}" r=".5" fill="#fff"/><circle cx="${B.x}" cy="${B.y}" r="1" fill="#14532d"/></g>`}
+$('#ov').innerHTML=s;
+['p0','p1'].forEach(p=>{const d=document.createElement('div');d.className='pawn '+p;d.id=p;$('#board').appendChild(d)})}
+function placePawns(){for(let i=0;i<2;i++){const p=pos(G.pos[i]),same=G.pos[0]==G.pos[1],off=same?(i?2.2:-2.2):0,e=$('#p'+i);e.style.left=(p.x+off)+'%';e.style.top=(p.y+(same?(i?2:-2):0))+'%';e.textContent=cfg.ic[i]}}
+function render(){const c=cfg;document.title=c.name;$('#title').textContent=c.name;
+$('#meta').innerHTML=`<b>Mapel:</b> ${esc(c.subj)}<br><b>Topik:</b> ${esc(c.topic)}<br><b>Tujuan:</b> ${esc(c.goal)}<br><b>Kelas:</b> ${esc(c.level)}`;
+$('#teams').innerHTML=[0,1].map(i=>`<div class="team ${G.turn==i&&!G.over?'act':''}"><span class="ic">${c.ic[i]}</span><div><div class="nm">${esc(c.t[i])}${G.turn==i&&!G.over?' ◀ giliran':''}</div><div class="st">Posisi kotak: <b>${G.pos[i]}</b> · Benar: ${G.ok[i]} · Salah: ${G.bad[i]}</div></div></div>`).join('')+`<div class="info">Dadu terakhir: <b>${G.last}</b></div>`;
+$('#rules').innerHTML='<b>Petunjuk:</b> Lempar dadu, jawab soal dengan benar agar pion maju. Tangga naik, ular turun, tepat di 100 untuk menang.<br>'+esc(c.rules);
+$('#mat').innerHTML=`<b>Materi:</b> ${esc(c.subj)} – ${esc(c.topic)}<br>${esc(c.goal)}`;
+$('#log').innerHTML=G.log.slice(-8).map(l=>'<li>'+esc(l)+'</li>').join('');
+$('#status').textContent=G.msg;$('#bRoll').disabled=G.busy||G.over||G.paused;placePawns()}
+function say(m){G.msg=m;G.log.push(m);render()}
+function newGame(){const v=cfg.qs.filter(validQ);G={pos:[1,1],ok:[0,0],bad:[0,0],turn:0,last:'-',log:[],busy:false,paused:false,over:false,used:[],msg:'',n:0,hist:[]};
+G.msg=v.length?`Giliran ${cfg.t[0]}. Tekan Lempar Dadu!`:'Bank soal kosong. Buka Pengaturan Guru untuk menambah soal.';render()}
+function pick(){let p=cfg.qs.map((q,i)=>({q,i})).filter(o=>validQ(o.q)&&(cfg.diff=='semua'||o.q.diff==cfg.diff));if(!p.length)p=cfg.qs.map((q,i)=>({q,i})).filter(o=>validQ(o.q));if(!p.length)return null;
+let f=p.filter(o=>!G.used.includes(o.i));if(!f.length){G.used=[];f=p}
+const o=cfg.sq?f[Math.floor(Math.random()*f.length)]:f[0];G.used.push(o.i);return o.q}
+async function roll(){if(G.busy||G.over||G.paused)return;const q=pick();if(!q){say('Tidak ada soal valid. Tambahkan soal di Pengaturan Guru.');return}
+G.busy=true;render();const dc=$('#dice');dc.classList.add('roll');tone(300,.5,'square');await sleep(650);dc.classList.remove('roll');
+const d=1+Math.floor(Math.random()*6);G.last=d;dc.textContent=d;say(`${cfg.t[G.turn]} melempar dadu: ${d}`);await sleep(500);ask(q,d)}
+function ask(q,d){const t=G.turn;let o=q.opts.slice(0,q.type=='tf'?2:4).map((x,i)=>({x,c:i==q.ans}));if(cfg.so&&q.type!='tf')for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]]}
+$('#qh').textContent=`${cfg.t[t]} · dadu ${d} · tingkat ${q.diff}`;$('#qt').textContent=q.q;$('#qf').innerHTML='';
+const box=$('#qo');box.innerHTML='';o.forEach((a,i)=>{const b=document.createElement('button');b.className='opt';b.textContent=(q.type=='tf'?'':'ABCD'[i]+'. ')+a.x;b.onclick=()=>answer(b,o,a.c,q,d);box.appendChild(b)});$('#mQ').classList.add('on')}
+function answer(btn,o,ok,q,d){const bs=[...document.querySelectorAll('#qo .opt')];bs.forEach((b,i)=>{b.disabled=true;if(o[i].c)b.classList.add('ok')});if(!ok)btn.classList.add('no');
+const t=G.turn;ok?G.ok[t]++:G.bad[t]++;tone(ok?660:200,.25);
+$('#qf').innerHTML=`<div class="fb ${ok?'ok':'no'}"><b>${ok?'✅ Benar!':'❌ Kurang tepat.'}</b> ${esc(q.exp||'')}</div><p><button class="btn gold" id="bNext">Lanjut</button></p>`;
+$('#bNext').focus();$('#bNext').onclick=()=>{$('#mQ').classList.remove('on');resolve(ok,d)}}
+async function resolve(ok,d){const t=G.turn,n=cfg.t[t];
+if(!ok){say(`${n} salah menjawab, pion tetap di ${G.pos[t]}.`)}
+else if(G.pos[t]+d>100){say(`${n} benar, tetapi ${G.pos[t]}+${d} melebihi 100. Pion tidak bergerak.`)}
+else{say(`${n} benar! Maju ${d} kotak.`);for(let i=0;i<d;i++){G.pos[t]++;tone(440+i*30,.08);render();await sleep(280)}
+const p=G.pos[t];if(p==100){return win(t)}
+if(LD[p]){say(`🪜 ${n} naik tangga dari ${p} ke ${LD[p]}!`);tone(780,.3);await sleep(500);G.pos[t]=LD[p];render();await sleep(600)}
+else if(SN[p]){say(`🐍 ${n} dimakan ular! Turun dari ${p} ke ${SN[p]}.`);tone(150,.4,'sawtooth');await sleep(500);G.pos[t]=SN[p];render();await sleep(600)}
+if(G.pos[t]==100)return win(t)}
+G.turn=1-t;G.busy=false;say(`Giliran ${cfg.t[G.turn]}.`)}
+function win(t){G.over=true;G.busy=false;say(`🏆 ${cfg.t[t]} mencapai kotak 100!`);[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,.25),i*200));
+$('#wn').textContent=`Selamat, ${cfg.t[t]}!`;$('#wm').textContent='Kerja sama yang luar biasa! Semua kelompok hebat hari ini.';
+$('#rec').innerHTML='<table><tr><th>Kelompok</th><th>Kotak</th><th>Benar</th><th>Salah</th></tr>'+[0,1].map(i=>`<tr><td>${cfg.ic[i]} ${esc(cfg.t[i])}</td><td>${G.pos[i]}</td><td>${G.ok[i]}</td><td>${G.bad[i]}</td></tr>`).join('')+'</table>';$('#mWin').classList.add('on')}
+// modals
+const open=id=>$(id).classList.add('on'),close=id=>$(id).classList.remove('on');
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('.modal').classList.remove('on'));
+$('#bHelp').onclick=()=>open('#mHelp');
+$('#bSnd').onclick=()=>{snd=!snd;$('#bSnd').textContent=snd?'🔊 Suara':'🔇 Senyap'};
+$('#bPause').onclick=()=>{if(G.over)return;G.paused=true;open('#mPause');render()};
+$('#bResume').onclick=()=>{G.paused=false;close('#mPause');render()};
+$('#bRe').onclick=()=>open('#mConf');$('#cNo').onclick=()=>close('#mConf');
+$('#cYes').onclick=()=>{close('#mConf');close('#mQ');close('#mWin');$('#dice').textContent='🎲';newGame()};
+$('#bAgain').onclick=()=>{close('#mWin');$('#dice').textContent='🎲';newGame()};$('#bBack').onclick=()=>close('#mWin');
+$('#bRoll').onclick=roll;
+// settings
+function fillIcons(){['fi0','fi1'].forEach((id,k)=>{$('#'+id).innerHTML=ICONS.map(i=>`<option ${i==D.ic[k]?'selected':''}>${i}</option>`).join('')})}
+function fillForm(){const m={fname:'name',flevel:'level',fsubj:'subj',ftopic:'topic',fgoal:'goal',frules:'rules'};for(const k in m)$('#'+k).value=D[m[k]];$('#ft0').value=D.t[0];$('#ft1').value=D.t[1];$('#fdiff').value=D.diff;$('#fsq').checked=D.sq;$('#fso').checked=D.so;fillIcons();list();resetE()}
+function list(){$('#qn').textContent=D.qs.length;$('#ql').innerHTML=D.qs.length?D.qs.map((q,i)=>`<div class="qi"><span>${i+1}. ${esc(q.q)} <i>(${q.type=='tf'?'B/S':'PG'}, ${esc(q.diff)})${validQ(q)?'':' ⚠ tidak valid'}</i></span><button class="btn sm" data-e="${i}">Edit</button><button class="btn sm red" data-d="${i}">Hapus</button></div>`).join(''):'<p class="info">Belum ada soal. Isi formulir di bawah lalu tekan Simpan soal.</p>'}
+$('#ql').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.d!==undefined){if(confirm('Hapus soal ini?')){D.qs.splice(+b.dataset.d,1);list();resetE()}}else if(b.dataset.e!==undefined){editIdx=+b.dataset.e;const q=D.qs[editIdx];$('#qeh').textContent='Edit soal '+(editIdx+1);$('#eq').value=q.q;$('#et').value=q.type;$('#ed').value=q.diff;for(let i=0;i<4;i++)$('#eo'+i).value=q.opts[i]||'';$('#ex').value=q.exp||'';typeUI();$('#ea').value=q.ans;$('#qe').scrollIntoView({block:'nearest'})}};
+function typeUI(){const tf=$('#et').value=='tf';$('#eopts').style.display=tf?'none':'grid';$('#ea').innerHTML=tf?'<option value="0">Benar</option><option value="1">Salah</option>':'<option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option>'}
+function resetE(){editIdx=-1;$('#qeh').textContent='Tambah soal';['eq','eo0','eo1','eo2','eo3','ex'].forEach(i=>$('#'+i).value='');$('#et').value='mcq';$('#ed').value='mudah';typeUI();$('#serr').textContent=''}
+$('#et').onchange=typeUI;$('#eCancel').onclick=resetE;
+$('#eSave').onclick=()=>{const tf=$('#et').value=='tf',q={q:$('#eq').value.trim(),type:$('#et').value,diff:$('#ed').value,exp:$('#ex').value.trim(),ans:+$('#ea').value,opts:tf?['Benar','Salah','','']:[0,1,2,3].map(i=>$('#eo'+i).value.trim())};
+if(!validQ(q)){$('#serr').textContent='Soal belum lengkap: isi pertanyaan, semua pilihan jawaban, dan kunci.';return}
+editIdx>=0?D.qs[editIdx]=q:D.qs.push(q);list();resetE()};
+$('#bSet').onclick=()=>{D=clone(cfg);fillForm();open('#mSet')};
+$('#sReset').onclick=()=>{if(confirm('Ganti semua isian dengan contoh bawaan?')){D=clone(DEF);fillForm()}};
+$('#sSave').onclick=()=>{const g=i=>$('#'+i).value.trim();
+if(!g('fname')||!g('fsubj')||!g('ftopic')||!g('ft0')||!g('ft1')){$('#serr').textContent='Nama permainan, mapel, topik, dan nama kedua kelompok wajib diisi.';return}
+if(g('ft0')==g('ft1')){$('#serr').textContent='Nama kedua kelompok harus berbeda.';return}
+if(!D.qs.some(validQ)){$('#serr').textContent='Tambahkan minimal satu soal yang valid.';return}
+Object.assign(D,{name:g('fname'),level:g('flevel'),subj:g('fsubj'),topic:g('ftopic'),goal:g('fgoal'),rules:g('frules'),t:[g('ft0'),g('ft1')],ic:[$('#fi0').value,$('#fi1').value],diff:$('#fdiff').value,sq:$('#fsq').checked,so:$('#fso').checked});
+cfg=D;save();close('#mSet');newGame()};
+$('#bExp').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(D,null,2)],{type:'application/json'}));a.download='galaxy-quest-soal.json';a.click()};
+$('#bImp').onclick=()=>$('#fimp').click();
+$('#fimp').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result),qs=Array.isArray(j)?j:j.qs;if(!Array.isArray(qs))throw 0;const ok=qs.filter(validQ);if(!ok.length)throw 0;if(!Array.isArray(j))Object.assign(D,j,{qs:ok});else D.qs=ok;if(!D.t||D.t.length<2)D.t=clone(DEF.t);if(!D.ic||D.ic.length<2)D.ic=clone(DEF.ic);fillForm();$('#serr').textContent=`Impor berhasil: ${ok.length} soal valid dari ${qs.length}.`}catch(x){$('#serr').textContent='File JSON tidak valid atau tidak berisi soal yang benar.'}};r.readAsText(f);e.target.value=''};
+document.addEventListener('keydown',e=>{if(e.key=='Escape')document.querySelectorAll('.modal.on:not(#mQ):not(#mPause)').forEach(m=>m.classList.remove('on'))});
+cfg=load();build();newGame();
+</script></body></html>
